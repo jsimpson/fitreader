@@ -1,0 +1,450 @@
+import { BinaryReader } from "https://deno.land/x/binary_reader@v0.1.0/mod.ts";
+
+const TYPES = {
+  0: {
+    endianAbility: 0,
+    baseFieldType: 0x00,
+    typeName: "enum",
+    invalidValue: 0xFF,
+    size: 1,
+  },
+  // 2's complement
+  1: {
+    endianAbility: 0,
+    baseFieldType: 0x01,
+    typeName: "sint8",
+    invalidValue: 0x7F,
+    size: 1,
+  },
+  2: {
+    endianAbility: 0,
+    baseFieldType: 0x02,
+    typeName: "uint8",
+    invalidValue: 0xFF,
+    size: 1,
+  },
+  // 2's complement
+  3: {
+    endianAbility: 1,
+    baseFieldType: 0x83,
+    typeName: "sint16",
+    invalidValue: 0x7FFF,
+    size: 2,
+  },
+  4: {
+    endianAbility: 1,
+    baseFieldType: 0x84,
+    typeName: "uint16",
+    invalidValue: 0xFFFF,
+    size: 2,
+  },
+  // 2's complement
+  5: {
+    endianAbility: 1,
+    baseFieldType: 0x85,
+    typeName: "sint32",
+    invalidValue: 0x7FFFFFFF,
+    size: 4,
+  },
+  6: {
+    endianAbility: 1,
+    baseFieldType: 0x86,
+    typeName: "uint32",
+    invalidValue: 0xFFFFFFFF,
+    size: 4,
+  },
+  // Null-terminated utf-8
+  7: {
+    endianAbility: 0,
+    baseFieldType: 0x07,
+    typeName: "string",
+    invalidValue: 0x00,
+    size: 1,
+  },
+  8: {
+    endianAbility: 1,
+    baseFieldType: 0x88,
+    typeName: "float32",
+    invalidValue: 0xFFFFFFFF,
+    size: 4,
+  },
+  9: {
+    endianAbility: 1,
+    baseFieldType: 0x89,
+    typeName: "float64",
+    invalidValue: 0xFFFFFFFFFFFFFFFF,
+    size: 8,
+  },
+  10: {
+    endianAbility: 0,
+    baseFieldType: 0x0A,
+    typeName: "uint8z",
+    invalidValue: 0x00,
+    size: 1,
+  },
+  11: {
+    endianAbility: 1,
+    baseFieldType: 0x8B,
+    typeName: "uint16z",
+    invalidValue: 0x0000,
+    size: 2,
+  },
+  12: {
+    endianAbility: 1,
+    baseFieldType: 0x8C,
+    typeName: "uint32z",
+    invalidValue: 0x00000000,
+    size: 4,
+  },
+  // Array of bytes, invalid if all fields are invalid.
+  13: {
+    endianAbility: 0,
+    baseFieldType: 0x0D,
+    typeName: "byte",
+    invalidValue: 0xFF,
+    size: 1,
+  },
+  // 2's complement
+  14: {
+    endianAbility: 1,
+    baseFieldType: 0x8E,
+    typeName: "sint64",
+    invalidValue: 0x7FFFFFFFFFFFFFFF,
+    size: 8,
+  },
+  15: {
+    endianAbility: 1,
+    baseFieldType: 0x8F,
+    typeName: "uint64",
+    invalidValue: 0xFFFFFFFFFFFFFFFF,
+    size: 8,
+  },
+  16: {
+    endianAbility: 1,
+    baseFieldType: 0x90,
+    typeName: "uint64z",
+    invalidValue: 0x0000000000000000,
+    size: 8,
+  },
+};
+
+const MASKS = {
+  7: 0b10000000,
+  6: 0b01000000,
+  5: 0b00100000,
+  4: 0b00010000,
+  3: 0b00001000,
+  2: 0b00000100,
+  1: 0b00000010,
+  0: 0b00000001
+}
+
+function readBit(byte, bit) {
+  return (byte & MASKS[bit]) >> bit;
+}
+
+function readBits(byte, range) {
+  let mask = 0;
+  for(let i = range[0]; i >= range[1]; i--) {
+    mask += MASKS[i];
+  }
+  return (byte & mask) >> range[1];
+}
+
+function main() {
+    const filename = Deno.args[0];
+    const file = Deno.openSync(filename);
+    const buf = Deno.readAllSync(file);
+    Deno.close(file.rid);
+  
+    const io = new BinaryReader(buf);
+    const fit = new Fit(io);
+
+    console.log({ fit });
+}
+
+class FileHeader {
+  constructor(io) {
+    this.size = io.readUint8();
+    this.protocolVersion = io.readUint8();
+    this.profileVersion = io.readUint16(true);
+    this.dataSize = io.readUint32(true);
+
+    this.dataType = new Uint8Array(4);
+    this.dataType[0] = io.readUint8();
+    this.dataType[1] = io.readUint8();
+    this.dataType[2] = io.readUint8();
+    this.dataType[3] = io.readUint8();
+
+    this.crc = io.readUint16(true);
+  }
+}
+
+class FieldDefinition {
+  constructor(io) {
+    this.fieldDefNum = io.readUint8();
+    this.size = io.readUint8();
+    const byte = io.readUint8();
+    this.endianness = readBit(byte, 7);
+    this.baseNum = readBits(byte, [4, 0]);
+  }
+}
+
+class DevFieldDefinition {
+  constructor(io, devFieldDefs) {
+    this.fieldNum = io.readUint8();
+    this.size = io.readUint8();
+    this.devDataIndex = io.readUint8();
+    this.fieldDef = devFieldDefs[this.devDataIndex];
+  }
+}
+
+class DefinitionRecord {
+  constructor(io, localNum, devFieldDefs = null) {
+    this.localNum = localNum;
+
+    this.reserved = io.readUint8();
+    this.architecture = io.readUint8();
+    const littleEndian = this.architecture === 0;
+    this.globalMsgNum = io.readUint16(littleEndian);
+    const numFields = io.readUint8();
+
+    this.fieldDefinitions = new Array(numFields);
+    for (let i = 0; i < numFields; i++) {
+      this.fieldDefinitions[i] = new FieldDefinition(io);
+    }
+
+    if (devFieldDefs !== null) {
+      const numDevFields = io.readUint8();
+      this.devFieldDefs = new Array(numDevFields);
+      for (let i = 0; i < numDevFields; i++) {
+        this.devFieldDefs[i] = new DevFieldDefinition(io, devFieldDefs);
+      }
+    }
+
+    this.dataRecords = []
+  }
+
+  isLittleEndian() {
+    return this.architecture === 0;
+  }
+
+  // TODO: Implement this...
+  valid() {
+    return true;
+  }
+}
+
+class RecordHeader {
+  constructor(io) {
+    const byte = io.readUint8();
+
+    this.headerType = readBit(byte, 7);
+    if (this.headerType === 0) {
+      this.messageType = readBit(byte, 6);
+      this.messageTypeSpecific = readBit(byte, 5);
+      this.reserved = readBit(byte, 4);
+      this.localMesssageType = readBits(byte, [3, 0]);
+    } else {
+      this.localMesssageType = readBits(byte, [6, 5]);
+      this.timeOffset = readBits(byte, [4, 0]);
+    }
+  }
+
+  isDefinition() {
+    return (this.headerType === 0) && (this.messageType == 1);
+  }
+
+  isData() {
+    return (this.headerType === 0) && (this.messageType == 0);
+  }
+
+  hasDevDefs() {
+    return (this.messageTypeSpecific === 1);
+  } 
+
+  hasTimestamp() {
+    return (this.headerType === 1);
+  }
+}
+
+class DataField {
+  constructor(io, opts = {}) {
+    const baseNum = opts['baseNum'];
+    const size = opts['size'];
+    const arch = opts['arch'];
+    const littleEndian = arch === 0;
+
+    const base = TYPES[baseNum];
+    
+    const multiples = opts['size'] / base['size'];
+
+    switch (base['typeName']) {
+      case 'enum':
+      case 'byte':
+      case 'uint8':
+      case 'uint8z':
+        for (let i = 0; i < multiples; i++) {
+          this.data = io.readUint8();
+        }
+        break;
+      case 'sint8':
+        for (let i = 0; i < multiples; i++) {
+        this.data = io.readInt8();
+        }
+        break;
+      case 'uint16':
+      case 'uint16z':
+        for (let i = 0; i < multiples; i++) {
+        this.data = io.readUint16(littleEndian);
+        }
+        break;
+      case 'sint16':
+        for (let i = 0; i < multiples; i++) {
+        this.data = io.readInt16(littleEndian);
+        }
+        break;
+      case 'uint32':
+      case 'uint32z':
+        for (let i = 0; i < multiples; i++) {
+        this.data = io.readUint32(littleEndian);
+        }
+        break;
+      case 'sint32':
+        for (let i = 0; i < multiples; i++) {
+        this.data = io.readInt32(littleEndian);
+        }
+        break;
+      case 'float32':
+        for (let i = 0; i < multiples; i++) {
+        this.data = io.readFloat32(littleEndian);
+        }
+        break;
+      case 'float64':
+        for (let i = 0; i < multiples; i++) {
+        this.data = io.readFloat64(littleEndian);
+        }
+        break;
+      case 'uint64':
+      case 'uint64z':
+        for (let i = 0; i < multiples; i++) {
+        this.data = io.readBigUint64(littleEndian);
+        }
+        break;
+      case 'sint64':
+        for (let i = 0; i < multiples; i++) {
+        this.data = io.readBigInt64(littleEndian);
+        }
+        break;
+      case 'string':
+        this.data = io.readString(size);
+        break;
+      default:
+        console.log(`Error reading base type: ${base}`);
+        Deno.exit(1);
+        break;
+    }
+
+    this.valid = this.check(this.data, base['invalid']);
+  }
+
+  check(data, invalid) {
+    return data !== invalid;
+  }
+}
+
+class DataRecord {
+  constructor(io, def) {
+    this.globalNum = def.globalMsgNum;
+    this.fields = def.fieldDefinitions.map(fieldDef => {
+      const opts = {
+        'baseNum': fieldDef.baseNum,
+        'size': fieldDef.size,
+        'arch': fieldDef.endianness
+      };
+
+      return [fieldDef.fieldDefNum, new DataField(io, opts)];
+    })
+
+    if (def.hasDevDefs) {
+      console.log("dev fields");
+      this.devFields = def.devFieldDefs.map(devFieldDef => {
+        const opts = {
+          'baseNum': devFieldDef.fieldDef['baseTypeId'],
+          'size': devFieldDef.size,
+          'arch': devFieldDef.endianness
+        }
+
+        return [devFieldDef.fieldDef['fieldName'], new DataField(io, opts)];
+      })
+    }
+  }
+
+  valid() {
+    const valid = this.fields.map(field => { field.valid() });
+    return valid.size > 0;
+  }
+
+  devFields() {
+    if (this.devFields) {
+      return this.devFields;
+    } else {
+      return {};
+    }
+  }
+}
+
+class Fit {
+  constructor(io) {
+    this.header = new FileHeader(io);    
+    let finished = [];
+
+    try {
+      let defs = {}
+      let devFieldDefs = {}
+
+      while (io.position < this.header.dataSize + 14) {
+        const h = new RecordHeader(io);
+
+        if (h.isDefinition()) {
+          let d;
+
+          if (h.hasDevDefs()) {
+            d = new DefinitionRecord(io, h.localMesssageType, devFieldDefs);
+          } else {
+            d = new DefinitionRecord(io, h.localMesssageType);
+          }
+
+          if (defs[h.localMesssageType] !== undefined) {
+            finished.push(defs[h.localMesssageType]);
+          }
+
+          defs[h.localMesssageType] = d;
+        } else if (h.isData()) {
+          const d = defs[h.localMesssageType];
+          const dataRecord = new DataRecord(io, d);
+
+          if (d.globalMsgNum === 206) {
+            console.log("dev field, shit");
+            // TODO: Implement decoding dev fields
+          } else {
+            d.dataRecords.push(dataRecord);
+          }
+        } else if (h.hasTimestamp()) {
+          console.log("has timestamp");
+        } else {
+          console.log("not def, not data, not timestamp");
+          Deno.exit(1);
+        }
+      }
+
+      finished.push(defs);
+      console.log(finished);
+    } catch (err) {
+      console.log({ err, finished });
+      Deno.exit(1);
+    }
+  }
+}
+
+main();
