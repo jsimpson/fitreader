@@ -284,56 +284,106 @@ class DataField {
       case 'byte':
       case 'uint8':
       case 'uint8z':
-        for (let i = 0; i < multiples; i++) {
+        if (multiples > 1) {
+          this.data = new Uint8Array(multiples);
+          for (let i = 0; i < multiples; i++) {
+            this.data[i] = io.readUint8();
+          }
+        } else {
           this.data = io.readUint8();
         }
         break;
       case 'sint8':
-        for (let i = 0; i < multiples; i++) {
-        this.data = io.readInt8();
+        if (multiples > 1) {
+          this.data = new Int8Array(multiples);
+          for (let i = 0; i < multiples; i++) {
+            this.data[i] = io.readInt8();
+          }
+        } else {
+          this.data = io.readInt8();
         }
         break;
       case 'uint16':
       case 'uint16z':
-        for (let i = 0; i < multiples; i++) {
-        this.data = io.readUint16(littleEndian);
+        if (multiples > 1) {
+          this.data = new Uint16Array(multiples);
+          for (let i = 0; i < multiples; i++) {
+            this.data[i] = io.readUint16(littleEndian);
+          }
+        } else {
+          this.data = io.readUint16(littleEndian);
         }
         break;
       case 'sint16':
-        for (let i = 0; i < multiples; i++) {
-        this.data = io.readInt16(littleEndian);
+        if (multiples > 1) {
+          this.data = new Int16Array(multiples);
+          for (let i = 0; i < multiples; i++) {
+            this.data[i] = io.readInt16(littleEndian);
+          }
+        } else {
+          this.data = io.readInt16(littleEndian);
         }
         break;
       case 'uint32':
       case 'uint32z':
-        for (let i = 0; i < multiples; i++) {
-        this.data = io.readUint32(littleEndian);
+        if (multiples > 1) {
+          this.data = new Uint32Array(multiples);
+          for (let i = 0; i < multiples; i++) {
+            this.data[i] = io.readUint32(littleEndian);
+          }
+        } else {
+          this.data = io.readUint32(littleEndian);
         }
         break;
       case 'sint32':
-        for (let i = 0; i < multiples; i++) {
-        this.data = io.readInt32(littleEndian);
+        if (multiples > 1) {
+          this.data = new Int32Array(multiples);
+          for (let i = 0; i < multiples; i++) {
+            this.data[i] = io.readInt32(littleEndian);
+          }
+        } else {
+          this.data = io.readInt32(littleEndian);
         }
         break;
       case 'float32':
-        for (let i = 0; i < multiples; i++) {
-        this.data = io.readFloat32(littleEndian);
+        if (multiples > 1) {
+          this.data = new Float32Array(multiples);
+          for (let i = 0; i < multiples; i++) {
+            this.data[i] = io.readFloat32(littleEndian);
+          }
+        } else {
+          this.data = io.readFloat32(littleEndian);
         }
         break;
       case 'float64':
-        for (let i = 0; i < multiples; i++) {
-        this.data = io.readFloat64(littleEndian);
+        if (multiples > 1) {
+          this.data = new Float64Array(multiples);
+          for (let i = 0; i < multiples; i++) {
+            this.data[i] = io.readFloat64(littleEndian);
+          }
+        } else {
+          this.data = io.readFloat64(littleEndian);
         }
         break;
       case 'uint64':
       case 'uint64z':
-        for (let i = 0; i < multiples; i++) {
-        this.data = io.readBigUint64(littleEndian);
+        if (multiples > 1) {
+          this.data = new Array(multiples);
+          for (let i = 0; i < multiples; i++) {
+            this.data[i] = io.readBigUint64(littleEndian);
+          }
+        } else {
+          this.data = io.readBigUint64(littleEndian);
         }
         break;
-      case 'sint64':
-        for (let i = 0; i < multiples; i++) {
-        this.data = io.readBigInt64(littleEndian);
+        case 'sint64':
+        if (multiples > 1) {
+          this.data = new Array(multiples);
+          for (let i = 0; i < multiples; i++) {
+            this.data[i] = io.readBigInt64(littleEndian);
+          }
+        } else {
+          this.data = io.readBigInt64(littleEndian);
         }
         break;
       case 'string':
@@ -394,9 +444,16 @@ class DataRecord {
   }
 }
 
+class Message {
+  constructor(definitions) {
+    this.globalNum = definitions[0];
+    this.name = MESSAGES[num];
+  }
+}
+
 class Fit {
   constructor(io) {
-    this.header = new FileHeader(io);    
+    this.header = new FileHeader(io);
     let finished = [];
 
     try {
@@ -439,7 +496,10 @@ class Fit {
       }
 
       finished.push(defs);
-      console.log(finished);
+
+      this.messages = finished.map(message => {
+        new Message(message);
+      });
     } catch (err) {
       console.log({ err, finished });
       Deno.exit(1);
