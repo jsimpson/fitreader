@@ -1,4 +1,7 @@
 import { BinaryReader } from "https://deno.land/x/binary_reader@v0.1.0/mod.ts";
+import { ENUMS } from "./enums.js";
+import { FIELDS } from "./fields.js";
+import { MESSAGES } from "./messages.js";
 
 const TYPES = {
   0: {
@@ -229,9 +232,14 @@ class DefinitionRecord {
     return this.architecture === 0;
   }
 
-  // TODO: Implement this...
   valid() {
-    return true;
+    const field = FIELDS[this.globalMsgNum];
+    if (field === undefined) {
+      return false;
+    }
+
+    this.dataRecords.map(dataRecord => {
+    });
   }
 }
 
@@ -273,7 +281,7 @@ class DataField {
     const baseNum = opts['baseNum'];
     const size = opts['size'];
     const arch = opts['arch'];
-    const littleEndian = arch === 0;
+    const littleEndian = arch === 1;
 
     const base = TYPES[baseNum];
     
@@ -395,10 +403,18 @@ class DataField {
         break;
     }
 
-    this.valid = this.check(this.data, base['invalid']);
+    this.valid = this.check(this.data, base['invalidValue']);
   }
 
   check(data, invalid) {
+    if (Array.isArray(data)) {
+      const valid = data.map(d => {
+        return d !== invalid;
+      });
+
+      return valid.length > 0;
+    }
+
     return data !== invalid;
   }
 }
@@ -431,8 +447,7 @@ class DataRecord {
   }
 
   valid() {
-    const valid = this.fields.map(field => { field.valid() });
-    return valid.size > 0;
+    return this.fields.map(field => { field.valid() });
   }
 
   devFields() {
@@ -445,9 +460,22 @@ class DataRecord {
 }
 
 class Message {
-  constructor(definitions) {
-    this.globalNum = definitions[0];
-    this.name = MESSAGES[num];
+  constructor(globalMsgNum, definitions) {
+    this.globalMsgNum = globalMsgNum;
+    this.name = MESSAGES[this.globalMsgNum];
+
+    if (this.name !== undefined) {
+      const field = FIELDS[this.globalMsgNum];
+      this.data = definitions.map(definition => {
+        this.makeMessage(field, definition);
+      });
+    }
+  }
+
+  // TODO: Ensure the definition is valid
+  makeMessage(field, definition) {
+    definition.dataRecords.map(dr => {
+    });
   }
 }
 
@@ -495,11 +523,27 @@ class Fit {
         }
       }
 
-      finished.push(defs);
+      for (const [key, def] of Object.entries(defs)) {
+        finished.push(def);
+      }
 
-      this.messages = finished.map(message => {
-        new Message(message);
-      });
+      const groupBy = (xs, key) => {
+        return xs.reduce((rv, x) => {
+          (rv[x[key]] = rv[x[key]] || []).push(x);
+          return rv;
+        }, {});
+      };
+
+      const grouped = groupBy(finished, 'globalMsgNum');
+
+      this.messages = [];
+      for (const [key, obj] of Object.entries(grouped)) {
+        const message = new Message(key, obj);
+        if ((message.name !== undefined) && (obj.valid)) {
+          this.messages.push(message);
+        } else {
+        }
+      }
     } catch (err) {
       console.log({ err, finished });
       Deno.exit(1);
