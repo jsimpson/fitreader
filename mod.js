@@ -462,4 +462,6 @@ class Fit {
   }
 }
 
-main();
+if (import.meta.main) {
+  main();
+}
