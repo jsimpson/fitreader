@@ -19,7 +19,7 @@ export const ENUMS = {
     "35": "segmentList",
     "40": "exdConfiguration",
     "247": "mfgRangeMin",
-    "254": "mfgRangeMax"
+    "254": "mfgRangeMax",
   },
   "enumManufacturer": {
     "1": "garmin",
@@ -141,7 +141,7 @@ export const ENUMS = {
     "271": "spivi",
     "272": "mioMagellan",
     "273": "evesports",
-    "5759": "actigraphcorp"
+    "5759": "actigraphcorp",
   },
   "enumGarminProduct": {
     "1": "hrm1",
@@ -285,7 +285,7 @@ export const ENUMS = {
     "29241": "di2AntConnector",
     "65531": "connectiqSimulator",
     "65532": "androidAntplusPlugin",
-    "65534": "connect"
+    "65534": "connect",
   },
   "enumEvent": {
     "0": "timer",
@@ -323,7 +323,7 @@ export const ENUMS = {
     "44": "riderPositionChange",
     "45": "elevHighAlert",
     "46": "elevLowAlert",
-    "47": "commTimeout"
+    "47": "commTimeout",
   },
   "enumEventType": {
     "0": "start",
@@ -335,7 +335,7 @@ export const ENUMS = {
     "6": "endDepreciated",
     "7": "endAllDepreciated",
     "8": "stopDisable",
-    "9": "stopDisableAll"
+    "9": "stopDisableAll",
   },
   "enumBatteryStatus": {
     "1": "new",
@@ -344,7 +344,7 @@ export const ENUMS = {
     "4": "low",
     "5": "critical",
     "6": "charging",
-    "7": "unknown"
+    "7": "unknown",
   },
   "enumBodyLocation": {
     "0": "leftLeg",
@@ -382,13 +382,13 @@ export const ENUMS = {
     "32": "rightBrachioradialis",
     "33": "rightForearmExtensors",
     "34": "neck",
-    "35": "throat"
+    "35": "throat",
   },
   "enumAntNetwork": {
     "0": "public",
     "1": "antplus",
     "2": "antfs",
-    "3": "private"
+    "3": "private",
   },
   "enumSourceType": {
     "0": "ant",
@@ -396,11 +396,11 @@ export const ENUMS = {
     "2": "bluetooth",
     "3": "bluetoothLowEnergy",
     "4": "wifi",
-    "5": "local"
+    "5": "local",
   },
   "enumGender": {
     "0": "female",
-    "1": "male"
+    "1": "male",
   },
   "enumLanguage": {
     "0": "english",
@@ -437,20 +437,20 @@ export const ENUMS = {
     "31": "hebrew",
     "32": "brazilianPortuguese",
     "33": "indonesian",
-    "254": "custom"
+    "254": "custom",
   },
   "enumDisplayMeasure": {
     "0": "metric",
-    "1": "statute"
+    "1": "statute",
   },
   "enumDisplayHeart": {
     "0": "bpm",
     "1": "max",
-    "2": "reserve"
+    "2": "reserve",
   },
   "enumDisplayPower": {
     "0": "watts",
-    "1": "percentFtp"
+    "1": "percentFtp",
   },
   "enumDisplayPosition": {
     "0": "degree",
@@ -494,18 +494,18 @@ export const ENUMS = {
     "38": "borneoRso",
     "39": "estonianGrid",
     "40": "latvianGrid",
-    "41": "swedishRef99Grid"
+    "41": "swedishRef99Grid",
   },
   "enumActivityClass": {
     "127": "level",
     "100": "levelMax",
-    "128": "athlete"
+    "128": "athlete",
   },
   "enumIntensity": {
     "0": "active",
     "1": "rest",
     "2": "warmup",
-    "3": "cooldown"
+    "3": "cooldown",
   },
   "enumLapTrigger": {
     "0": "manual",
@@ -516,7 +516,7 @@ export const ENUMS = {
     "5": "positionWaypoint",
     "6": "positionMarked",
     "7": "sessionEnd",
-    "8": "fitnessEquipment"
+    "8": "fitnessEquipment",
   },
   "enumSport": {
     "0": "generic",
@@ -564,7 +564,7 @@ export const ENUMS = {
     "42": "rafting",
     "43": "windsurfing",
     "44": "kitesurfing",
-    "254": "all"
+    "254": "all",
   },
   "enumSubSport": {
     "0": "generic",
@@ -616,17 +616,17 @@ export const ENUMS = {
     "46": "gravelCycling",
     "47": "eBikeMountain",
     "48": "commuting",
-    "254": "all"
+    "254": "all",
   },
   "enumSessionTrigger": {
     "0": "activityEnd",
     "1": "manual",
     "2": "autoMultiSport",
-    "3": "fitnessEquipment"
+    "3": "fitnessEquipment",
   },
   "enumActivity": {
     "0": "manual",
-    "1": "autoMultiSport"
+    "1": "autoMultiSport",
   },
   "antplusDeviceType": {
     "1": "antfs",
@@ -651,7 +651,7 @@ export const ENUMS = {
     "121": "bikeSpeedCadence",
     "122": "bikeCadence",
     "123": "bikeSpeed",
-    "124": "strideSpeedDistance"
+    "124": "strideSpeedDistance",
   },
   "enumSwimStroke": {
     "0": "freestyle",
@@ -660,11 +660,11 @@ export const ENUMS = {
     "3": "butterfly",
     "4": "drill",
     "5": "mixed",
-    "6": "im"
+    "6": "im",
   },
   "enumLengthType": {
     "0": "idle",
-    "1": "active"
+    "1": "active",
   },
   "enumTimeMode": {
     "0": "hour12",
@@ -672,7 +672,7 @@ export const ENUMS = {
     "2": "military",
     "3": "hour12WithSeconds",
     "4": "hour24WithSeconds",
-    "5": "utc"
+    "5": "utc",
   },
   "enumBacklightMode": {
     "0": "off",
@@ -681,29 +681,29 @@ export const ENUMS = {
     "3": "autoBrightness",
     "4": "smartNotifications",
     "5": "keyAndMessagesNight",
-    "6": "keyAndMessagesAndSmartNotifications"
+    "6": "keyAndMessagesAndSmartNotifications",
   },
   "enumDateMode": {
     "0": "dayMonth",
-    "1": "monthDay"
+    "1": "monthDay",
   },
   "enumDisplayOrientation": {
     "0": "auto",
     "1": "portrait",
     "2": "landscape",
     "3": "portraitFlipped",
-    "4": "landscapeFlipped"
+    "4": "landscapeFlipped",
   },
   "enumSide": {
     "0": "right",
-    "1": "left"
+    "1": "left",
   },
   "enumAutoSyncFrequency": {
     "0": "never",
     "1": "occasionally",
     "2": "frequent",
     "3": "onceADay",
-    "4": "remote"
+    "4": "remote",
   },
   "enumAutoActivityDetect": {
     "0": "none",
@@ -712,11 +712,11 @@ export const ENUMS = {
     "4": "swimming",
     "8": "walking",
     "32": "elliptical",
-    "1024": "sedentary"
+    "1024": "sedentary",
   },
   "enumSwitch": {
     "0": "off",
     "1": "on",
-    "2": "auto"
-  }
-}
+    "2": "auto",
+  },
+};

@@ -80,5 +80,5 @@ export const MESSAGES = {
   "207": "developerDataId",
   "208": "magnetometerData",
   "65280": "mfgRangeMin",
-  "65534": "mfgRangeMax"
-}
+  "65534": "mfgRangeMax",
+};
