@@ -5,6 +5,8 @@ import { FIELDS } from "./fields.js";
 import { MESSAGES } from "./messages.js";
 import { TYPES } from "./types.js";
 
+import { DevFieldDefinition } from "./dev_field_definition.js";
+import { FieldDefinition } from "./field_definition.js"
 import { FileHeader } from "./file_header.js";
 
 import { readBit, readBits } from "./bits.js";
@@ -19,25 +21,6 @@ function main() {
   const fit = new Fit(io);
 
   console.log({ fit });
-}
-
-class FieldDefinition {
-  constructor(io) {
-    this.fieldDefNum = io.readUint8();
-    this.size = io.readUint8();
-    const byte = io.readUint8();
-    this.endianness = readBit(byte, 7);
-    this.baseNum = readBits(byte, [4, 0]);
-  }
-}
-
-class DevFieldDefinition {
-  constructor(io, devFieldDefs) {
-    this.fieldNum = io.readUint8();
-    this.size = io.readUint8();
-    this.devDataIndex = io.readUint8();
-    this.fieldDef = devFieldDefs[this.devDataIndex];
-  }
 }
 
 class DefinitionRecord {
