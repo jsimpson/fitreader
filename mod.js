@@ -1,4 +1,4 @@
-import { BinaryReader } from "https://deno.land/x/binary_reader@v0.1.2/mod.ts";
+import { BinaryReader } from "./deps.ts";
 
 import { Fit } from "./fit.js";
 
