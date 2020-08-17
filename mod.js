@@ -1,4 +1,4 @@
-import { BinaryReader } from "https://deno.land/x/binary_reader@v0.1.0/mod.ts";
+import { BinaryReader } from "https://deno.land/x/binary_reader@v0.1.2/mod.ts";
 import { ENUMS } from "./enums.js";
 import { FIELDS } from "./fields.js";
 import { MESSAGES } from "./messages.js";
@@ -11,7 +11,6 @@ const TYPES = {
     invalidValue: 0xFF,
     size: 1,
   },
-  // 2's complement
   1: {
     endianAbility: 0,
     baseFieldType: 0x01,
@@ -26,7 +25,6 @@ const TYPES = {
     invalidValue: 0xFF,
     size: 1,
   },
-  // 2's complement
   3: {
     endianAbility: 1,
     baseFieldType: 0x83,
@@ -41,7 +39,6 @@ const TYPES = {
     invalidValue: 0xFFFF,
     size: 2,
   },
-  // 2's complement
   5: {
     endianAbility: 1,
     baseFieldType: 0x85,
@@ -56,7 +53,6 @@ const TYPES = {
     invalidValue: 0xFFFFFFFF,
     size: 4,
   },
-  // Null-terminated utf-8
   7: {
     endianAbility: 0,
     baseFieldType: 0x07,
@@ -99,7 +95,6 @@ const TYPES = {
     invalidValue: 0x00000000,
     size: 4,
   },
-  // Array of bytes, invalid if all fields are invalid.
   13: {
     endianAbility: 0,
     baseFieldType: 0x0D,
@@ -107,7 +102,6 @@ const TYPES = {
     invalidValue: 0xFF,
     size: 1,
   },
-  // 2's complement
   14: {
     endianAbility: 1,
     baseFieldType: 0x8E,
