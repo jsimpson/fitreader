@@ -311,11 +311,7 @@ class DataRecord {
   }
 
   devFields() {
-    if (this.devFields) {
-      return this.devFields;
-    } else {
-      return {};
-    }
+    return this.devFields ? this.devFields : {};
   }
 }
 
@@ -430,9 +426,6 @@ class Fit {
           }
         } else if (h.hasTimestamp()) {
           console.log("has timestamp");
-        } else {
-          console.log("not def, not data, not timestamp");
-          Deno.exit(1);
         }
       }
 
