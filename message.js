@@ -11,7 +11,7 @@ export class Message {
       const fields = FIELDS[this.globalMsgNum];
       this.data = definitions.map((definition) => {
         return this.makeMessage(fields, definition);
-      });
+      }).flat();
     }
   }
 

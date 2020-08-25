@@ -33,6 +33,11 @@ export class DefinitionRecord {
     return this.architecture === 0;
   }
 
+  hasDefFields() {
+    return ((this.devFieldDefs !== undefined) &&
+      (this.devFieldDefs.length > 1));
+  }
+
   valid() {
     const fields = FIELDS[this.globalMsgNum];
     if (fields === undefined) {
