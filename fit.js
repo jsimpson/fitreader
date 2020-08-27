@@ -4,9 +4,17 @@ import { RecordHeader } from "./record_header.js";
 import { DataRecord } from "./data_record.js";
 import { Message } from "./message.js";
 
+import { calculateCrc } from "./crc.js";
+
 export class Fit {
   constructor(io) {
     this.header = new FileHeader(io);
+
+    if (!this.validate(io)) {
+      // raise some error
+      Deno.exit(0);
+    }
+
     this.messages = [];
     let finished = [];
 
@@ -61,7 +69,7 @@ export class Fit {
 
       for (const [key, obj] of Object.entries(grouped)) {
         const message = new Message(key, obj);
-        if ((message.name !== undefined) && (obj[0].valid)) {
+        if (message.name !== undefined && obj[0].valid) {
           this.messages.push(message);
         }
       }
@@ -69,5 +77,34 @@ export class Fit {
       console.log({ err, finished });
       Deno.exit(1);
     }
+  }
+
+  validate(io) {
+    if (this.header.size === 14) {
+      io.seek(0);
+
+      // The header CRC doesn't include bytes 13 and 14, which hold the header CRC...
+      const crc = calculateCrc(io, 0, 12);
+      if (crc !== this.header.crc) {
+        return false;
+      }
+
+      io.seek(14);
+    }
+
+    const fileCrcPosition = this.header.size + this.header.dataSize;
+    io.seek(fileCrcPosition);
+
+    const fileCrc = io.readUint8() + (io.readUint8() << 8);
+    const start = this.header.size === 12 ? 0 : this.header.size;
+    io.seek(start);
+
+    if (fileCrc !== calculateCrc(io, start, fileCrcPosition)) {
+      return false;
+    }
+
+    io.seek(this.header.size);
+
+    return true;
   }
 }
