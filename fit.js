@@ -8,17 +8,16 @@ import { calculateCrc } from "./crc.js";
 
 export class Fit {
   constructor(io) {
-    this.header = new FileHeader(io);
-
-    if (!this.validate(io)) {
-      // raise some error
-      Deno.exit(0);
-    }
-
-    this.messages = [];
-    let finished = [];
-
     try {
+      this.header = new FileHeader(io);
+
+      if (!this.validate(io)) {
+        console.err("Invalid or malformed .FIT file.");
+        Deno.exit(1);
+      }
+
+      this.messages = [];
+      let finished = [];
       let defs = {};
       let devFieldDefs = {};
 
