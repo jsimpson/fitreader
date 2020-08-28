@@ -8,11 +8,11 @@ It has a very small API footprint, exposing a single class which is capable of h
 
 ## Usage
 
-See [mod.ts](mod.ts):
+See [mod.js](mod.js):
 
 ```javascript
 // runner.js
-import { BinaryReader } from "https://deno.land/x/binary_reader@v0.1.2/mod.ts";
+import { BinaryReader } from "https://deno.land/x/binary_reader@v0.1.4/mod.ts";
 
 import { Fit } from "./fit.js";
 
