@@ -9,18 +9,27 @@ export class Message {
 
     if (this.name !== undefined) {
       const fields = FIELDS[this.globalMsgNum];
-      this.data = definitions.map((definition) => {
-        return this.makeMessage(fields, definition);
-      }).flat();
+      this.data = definitions
+        .map((definition) => {
+          return this.makeMessage(fields, definition);
+        })
+        .flat();
     }
   }
 
   // TODO: Ensure the definition is valid
   makeMessage(fields, definition) {
-    const processed = definition.valid().map((dataRecords) => {
-      return dataRecords.map((dataRecord) => {
-        return this.processValue(fields[dataRecord[0]], dataRecord[1].data);
+    const finished = [];
+    definition.valid().map((dataRecords) => {
+      const obj = {};
+      dataRecords.map((dataRecord) => {
+        const data = this.processValue(
+          fields[dataRecord[0]],
+          dataRecord[1].data
+        );
+        obj[data[0]] = data[1];
       });
+      finished.push(obj);
     });
 
     // TODO: Process events and device info
@@ -33,21 +42,22 @@ export class Message {
     }
 
     // TODO: Process and combine with developer fields
-    return processed;
+    return finished;
   }
 
   processValue(type, value) {
     if (type["type"].substring(0, 4) === "enum") {
       value = ENUMS[type["type"]][value];
     } else if (
-      (type["type"] === "dateTime") || (type["type"] === "localDateTime")
+      type["type"] === "dateTime" ||
+      type["type"] === "localDateTime"
     ) {
       const t = new Date(Date.UTC(1989, 11, 31, 0, 0, 0)).getTime() / 1000;
       const d = new Date(0);
       d.setUTCSeconds(value + t);
       value = d.toISOString();
     } else if (type["type"] === "coordinates") {
-      value *= (180.0 / 2 ** 31);
+      value *= 180.0 / 2 ** 31;
     }
 
     if (type["scale"] !== 0) {
