@@ -8,19 +8,19 @@ import { calculateCrc } from "./crc.js";
 
 export class Fit {
   constructor(io) {
+    this.header = new FileHeader(io);
+
+    if (!this.validate(io)) {
+      console.error("Invalid or malformed .FIT file.");
+      Deno.exit(1);
+    }
+
+    this.messages = [];
+    let finished = [];
+    let defs = {};
+    let devFieldDefs = {};
+
     try {
-      this.header = new FileHeader(io);
-
-      if (!this.validate(io)) {
-        console.err("Invalid or malformed .FIT file.");
-        Deno.exit(1);
-      }
-
-      this.messages = [];
-      let finished = [];
-      let defs = {};
-      let devFieldDefs = {};
-
       while (io.position < this.header.dataSize + 14) {
         const h = new RecordHeader(io);
 
@@ -73,7 +73,7 @@ export class Fit {
         }
       }
     } catch (err) {
-      console.log({ err, finished });
+      console.error(err);
       Deno.exit(1);
     }
   }
