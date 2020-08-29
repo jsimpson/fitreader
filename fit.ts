@@ -1,3 +1,5 @@
+import { BinaryReader } from "./deps.ts";
+
 import { DefinitionRecord } from "./definition_record.js";
 import { FileHeader } from "./file_header.js";
 import { RecordHeader } from "./record_header.js";
@@ -7,7 +9,10 @@ import { Message } from "./message.js";
 import { calculateCrc } from "./crc.js";
 
 export class Fit {
-  constructor(io) {
+  header: FileHeader;
+  messages: Message[] = [];
+
+  constructor(io: BinaryReader) {
     this.header = new FileHeader(io);
 
     if (!this.validate(io)) {
@@ -17,7 +22,7 @@ export class Fit {
 
     this.messages = [];
     let finished = [];
-    let defs = {};
+    let defs: any = {};
     let devFieldDefs = {};
 
     try {
@@ -57,8 +62,8 @@ export class Fit {
         finished.push(def);
       }
 
-      const groupBy = (xs, key) => {
-        return xs.reduce((rv, x) => {
+      const groupBy = (xs: any, key: any) => {
+        return xs.reduce((rv: any, x: any) => {
           (rv[x[key]] = rv[x[key]] || []).push(x);
           return rv;
         }, {});
@@ -68,7 +73,7 @@ export class Fit {
 
       for (const [key, obj] of Object.entries(grouped)) {
         const message = new Message(key, obj);
-        if (message.name !== undefined && obj[0].valid) {
+        if (message.name !== undefined) {
           this.messages.push(message);
         }
       }
@@ -78,7 +83,7 @@ export class Fit {
     }
   }
 
-  validate(io) {
+  validate(io: BinaryReader) {
     if (this.header.size === 14) {
       io.seek(0);
 

@@ -1,5 +1,32 @@
 class Lap {
-  constructor(lap) {
+  timestamp: string;
+  startTime: string;
+  startPositionLat: number;
+  startPositionLong: number;
+  endPositionLat: number;
+  endPositionLong: number;
+  totalElapsedTime: string;
+  totalTimerTime: string;
+  totalDistance: number;
+  totalCycles: number;
+  necLat: number;
+  necLong: number;
+  swcLat: number;
+  swcLong: number;
+  enhancedAvgSpeed: number;
+  enhancedMaxSpeed: number;
+  messageIndex: number;
+  totalCalories: number;
+  totalAscent: number;
+  totalDescent: number;
+  avgHeartRate: number;
+  maxHeartRate: number;
+  avgCadence: number;
+  maxCadence: number;
+  avgFractionalCadence: number;
+  maxFractionalCadence: number;
+
+  constructor(lap: { [index: string]: any }) {
     this.timestamp = lap["timestamp"];
     this.startTime = lap["startTime"];
     this.startPositionLat = lap["startPositionLat"];
@@ -20,22 +47,27 @@ class Lap {
     this.totalCalories = lap["totalCalories"];
     this.totalAscent = lap["totalAscent"];
     this.totalDescent = lap["totalDescent"];
-    this.event = lap["event"];
-    this.eventType = lap["eventType"];
     this.avgHeartRate = lap["avgHeartRate"];
     this.maxHeartRate = lap["maxHeartRate"];
     this.avgCadence = lap["avgCadence"];
     this.maxCadence = lap["maxCadence"];
-    this.lapTrigger = lap["lapTrigger"];
-    this.sport = lap["sport"];
-    this.subSport = lap["subSport"];
     this.avgFractionalCadence = lap["avgFractionalCadence"];
     this.maxFractionalCadence = lap["maxFractionalCadence"];
   }
 }
 
 class Trackpoint {
-  constructor(trackpoint) {
+  timestamp: string;
+  latitude: number;
+  longitude: number;
+  distance: number;
+  speed: number;
+  elevation: number;
+  heartRate: number;
+  cadence: number;
+  fractionalCadence: number;
+
+  constructor(trackpoint: { [index: string]: any }) {
     this.timestamp = trackpoint["timestamp"];
     this.latitude = trackpoint["positionLat"];
     this.longitude = trackpoint["positionLong"];
@@ -49,29 +81,32 @@ class Trackpoint {
 }
 
 export class Activity {
-  constructor(fit) {
-    let lapMessage = fit.messages.filter((message) => {
+  laps: Lap[];
+  trackpoints: Trackpoint[];
+
+  constructor(fit: any){
+    let lapMessage = fit.messages.filter((message: any) => {
       if (message.name === "lap") {
         return message;
       }
     });
 
-    let recordMessage = fit.messages.filter((message) => {
+    let recordMessage = fit.messages.filter((message: any) => {
       if (message.name === "record") {
         return message;
       }
     });
 
-    this.laps = lapMessage[0].data.map((lap) => {
+    this.laps = lapMessage[0].data.map((lap: any) => {
       return new Lap(lap);
     });
 
-    this.trackpoints = recordMessage[0].data.map((trackpoint) => {
+    this.trackpoints = recordMessage[0].data.map((trackpoint: any) => {
       return new Trackpoint(trackpoint);
     });
   }
 
-  async dump(filename) {
+  async dump(filename?: string): Promise<void> {
     if (filename === undefined) {
       filename = `${this.laps[0]["timestamp"]}.json`;
     }

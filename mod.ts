@@ -1,9 +1,9 @@
 import { BinaryReader } from "./deps.ts";
 
-import { Activity } from "./activity.js";
-import { Fit } from "./fit.js";
+import { Activity } from "./activity.ts";
+import { Fit } from "./fit.ts";
 
-async function main() {
+async function main(): Promise<void> {
   const filename = Deno.args[0];
   const file = Deno.openSync(filename);
   const buf = Deno.readAllSync(file);
