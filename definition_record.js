@@ -1,4 +1,4 @@
-import { FIELDS } from "./fields.js";
+import { FIELDS } from "./fields.ts";
 
 import { DevFieldDefinition } from "./dev_field_definition.ts";
 import { FieldDefinition } from "./field_definition.ts";

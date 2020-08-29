@@ -6,7 +6,7 @@ import { RecordHeader } from "./record_header.ts";
 import { DataRecord } from "./data_record.ts";
 import { Message } from "./message.js";
 
-import { calculateCrc } from "./crc.js";
+import { calculateCrc } from "./crc.ts";
 
 export class Fit {
   header: FileHeader;

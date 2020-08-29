@@ -1,6 +1,6 @@
 import { ENUMS } from "./enums.ts";
-import { FIELDS } from "./fields.js";
-import { MESSAGES } from "./messages.js";
+import { FIELDS } from "./fields.ts";
+import { MESSAGES } from "./messages.ts";
 
 export class Message {
   constructor(globalMsgNum, definitions) {

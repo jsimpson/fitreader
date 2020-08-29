@@ -1,4 +1,4 @@
-export const FIELDS = {
+export const FIELDS: { [index: string]: { [index: string]: any }} = {
   "0": {
     "0": {
       "name": "filetype",
