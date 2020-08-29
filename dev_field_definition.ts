@@ -1,5 +1,12 @@
+import { BinaryReader } from "./deps.ts";
+
 export class DevFieldDefinition {
-  constructor(io, devFieldDefs) {
+  fieldNum: number;
+  size: number;
+  devDataIndex: number;
+  fieldDef: any;
+
+  constructor(io: BinaryReader, devFieldDefs: any) {
     this.fieldNum = io.readUint8();
     this.size = io.readUint8();
     this.devDataIndex = io.readUint8();

@@ -1,7 +1,13 @@
+import { BinaryReader } from "./deps.ts";
 import { readBit, readBits } from "./bits.ts";
 
 export class FieldDefinition {
-  constructor(io) {
+  fieldDefNum: number;
+  size: number;
+  endianness: number;
+  baseNum: number;
+
+  constructor(io: BinaryReader) {
     this.fieldDefNum = io.readUint8();
     this.size = io.readUint8();
     const byte = io.readUint8();

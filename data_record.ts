@@ -1,9 +1,13 @@
+import { BinaryReader } from "./deps.ts";
 import { DataField } from "./data_field.js";
 
 export class DataRecord {
-  constructor(io, def) {
+  globalNum: number;
+  fields: [];
+
+  constructor(io: BinaryReader, def: any) {
     this.globalNum = def.globalMsgNum;
-    this.fields = def.fieldDefinitions.map((fieldDef) => {
+    this.fields = def.fieldDefinitions.map((fieldDef: any) => {
       const opts = {
         baseNum: fieldDef.baseNum,
         size: fieldDef.size,
@@ -14,8 +18,7 @@ export class DataRecord {
     });
 
     if (def.hasDevDefs) {
-      console.log("dev fields");
-      this.devFields = def.devFieldDefs.map((devFieldDef) => {
+      this.devFields = def.devFieldDefs.map((devFieldDef: any) => {
         const opts = {
           baseNum: devFieldDef.fieldDef["baseTypeId"],
           size: devFieldDef.size,
@@ -27,9 +30,11 @@ export class DataRecord {
     }
   }
 
-  valid() {
-    return this.fields.filter((field) => {
-      return field[1].valid;
+  valid(): any {
+    return this.fields.filter((field: any) => {
+      if (field[1].valid) {
+        return field;
+      }
     });
   }
 

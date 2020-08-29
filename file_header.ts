@@ -1,5 +1,14 @@
+import { BinaryReader } from "./deps.ts";
+
 export class FileHeader {
-  constructor(io) {
+  size: number;
+  protocolVersion: number;
+  profileVersion: number;
+  dataSize: number;
+  dataType: Uint8Array;
+  crc: number;
+
+  constructor(io: BinaryReader) {
     this.size = io.readUint8();
     this.protocolVersion = io.readUint8();
     this.profileVersion = io.readUint16(true);

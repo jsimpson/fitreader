@@ -85,13 +85,13 @@ export class Activity {
   trackpoints: Trackpoint[];
 
   constructor(fit: any) {
-    let lapMessage = fit.messages.filter((message: any) => {
+    const lapMessage = fit.messages.filter((message: any) => {
       if (message.name === "lap") {
         return message;
       }
     });
 
-    let recordMessage = fit.messages.filter((message: any) => {
+    const recordMessage = fit.messages.filter((message: any) => {
       if (message.name === "record") {
         return message;
       }

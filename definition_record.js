@@ -1,7 +1,7 @@
 import { FIELDS } from "./fields.js";
 
-import { DevFieldDefinition } from "./dev_field_definition.js";
-import { FieldDefinition } from "./field_definition.js";
+import { DevFieldDefinition } from "./dev_field_definition.ts";
+import { FieldDefinition } from "./field_definition.ts";
 
 export class DefinitionRecord {
   constructor(io, localNum, devFieldDefs = null) {

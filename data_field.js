@@ -1,4 +1,4 @@
-import { TYPES } from "./types.js";
+import { DATA_TYPES } from "./data_types.ts";
 
 export class DataField {
   constructor(io, opts = {}) {
@@ -7,7 +7,7 @@ export class DataField {
     const arch = opts["arch"];
     const littleEndian = arch === 1;
 
-    const base = TYPES[baseNum];
+    const base = DATA_TYPES[baseNum];
 
     const multiples = opts["size"] / base["size"];
 

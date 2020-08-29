@@ -1,9 +1,9 @@
 import { BinaryReader } from "./deps.ts";
 
 import { DefinitionRecord } from "./definition_record.js";
-import { FileHeader } from "./file_header.js";
-import { RecordHeader } from "./record_header.js";
-import { DataRecord } from "./data_record.js";
+import { FileHeader } from "./file_header.ts";
+import { RecordHeader } from "./record_header.ts";
+import { DataRecord } from "./data_record.ts";
 import { Message } from "./message.js";
 
 import { calculateCrc } from "./crc.js";

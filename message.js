@@ -1,4 +1,4 @@
-import { ENUMS } from "./enums.js";
+import { ENUMS } from "./enums.ts";
 import { FIELDS } from "./fields.js";
 import { MESSAGES } from "./messages.js";
 
@@ -25,7 +25,7 @@ export class Message {
       dataRecords.map((dataRecord) => {
         const data = this.processValue(
           fields[dataRecord[0]],
-          dataRecord[1].data,
+          dataRecord[1].data
         );
         obj[data[0]] = data[1];
       });

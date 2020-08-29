@@ -1,7 +1,15 @@
+import { BinaryReader } from "./deps.ts";
 import { readBit, readBits } from "./bits.ts";
 
 export class RecordHeader {
-  constructor(io) {
+  headerType: number;
+  messageType: number | undefined;
+  messageTypeSpecific: number | undefined;
+  reserved: number | undefined;
+  localMesssageType: number;
+  timeOffset: number | undefined;
+
+  constructor(io: BinaryReader) {
     const byte = io.readUint8();
 
     this.headerType = readBit(byte, 7);
