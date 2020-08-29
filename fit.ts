@@ -58,7 +58,7 @@ export class Fit {
         }
       }
 
-      for (const [key, def] of Object.entries(defs)) {
+      for (const [_key, def] of Object.entries(defs)) {
         finished.push(def);
       }
 

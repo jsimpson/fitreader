@@ -34,8 +34,7 @@ export class DefinitionRecord {
   }
 
   hasDefFields() {
-    return ((this.devFieldDefs !== undefined) &&
-      (this.devFieldDefs.length > 1));
+    return this.devFieldDefs !== undefined && this.devFieldDefs.length > 1;
   }
 
   valid() {

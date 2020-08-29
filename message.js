@@ -25,7 +25,7 @@ export class Message {
       dataRecords.map((dataRecord) => {
         const data = this.processValue(
           fields[dataRecord[0]],
-          dataRecord[1].data
+          dataRecord[1].data,
         );
         obj[data[0]] = data[1];
       });

@@ -84,7 +84,7 @@ export class Activity {
   laps: Lap[];
   trackpoints: Trackpoint[];
 
-  constructor(fit: any){
+  constructor(fit: any) {
     let lapMessage = fit.messages.filter((message: any) => {
       if (message.name === "lap") {
         return message;

@@ -1,4 +1,4 @@
-import { readBit, readBits } from "./bits.js";
+import { readBit, readBits } from "./bits.ts";
 
 export class FieldDefinition {
   constructor(io) {

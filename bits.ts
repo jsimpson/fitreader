@@ -1,4 +1,4 @@
-const MASKS = {
+const MASKS: { [index: number]: number } = {
   7: 0b1000_0000,
   6: 0b0100_0000,
   5: 0b0010_0000,
@@ -9,13 +9,13 @@ const MASKS = {
   0: 0b0000_0001,
 };
 
-export function readBit(byte, bit) {
+export function readBit(byte: number, bit: number) {
   return (byte & MASKS[bit]) >> bit;
 }
 
-export function readBits(byte, range) {
+export function readBits(byte: number, range: number[]) {
   let mask = 0;
-  for (let i = range[0]; i >= range[1]; i--) {
+  for (let i: number = range[0]; i >= range[1]; i--) {
     mask += MASKS[i];
   }
   return (byte & mask) >> range[1];

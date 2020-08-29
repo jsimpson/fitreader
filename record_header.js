@@ -1,4 +1,4 @@
-import { readBit, readBits } from "./bits.js";
+import { readBit, readBits } from "./bits.ts";
 
 export class RecordHeader {
   constructor(io) {
@@ -17,18 +17,18 @@ export class RecordHeader {
   }
 
   isDefinition() {
-    return (this.headerType === 0) && (this.messageType == 1);
+    return this.headerType === 0 && this.messageType == 1;
   }
 
   isData() {
-    return (this.headerType === 0) && (this.messageType == 0);
+    return this.headerType === 0 && this.messageType == 0;
   }
 
   hasDevDefs() {
-    return (this.messageTypeSpecific === 1);
+    return this.messageTypeSpecific === 1;
   }
 
   hasTimestamp() {
-    return (this.headerType === 1);
+    return this.headerType === 1;
   }
 }
