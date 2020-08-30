@@ -4,7 +4,7 @@ import { DefinitionRecord } from "./definition_record.js";
 import { FileHeader } from "./file_header.ts";
 import { RecordHeader } from "./record_header.ts";
 import { DataRecord } from "./data_record.ts";
-import { Message } from "./message.js";
+import { Message } from "./message.ts";
 
 import { calculateCrc } from "./crc.ts";
 
@@ -72,7 +72,7 @@ export class Fit {
       const grouped = groupBy(finished, "globalMsgNum");
 
       for (const [key, obj] of Object.entries(grouped)) {
-        const message = new Message(key, obj);
+        const message = new Message(Number(key), obj);
         if (message.name !== undefined) {
           this.messages.push(message);
         }
@@ -83,7 +83,7 @@ export class Fit {
     }
   }
 
-  validate(io: BinaryReader) {
+  validate(io: BinaryReader): boolean {
     if (this.header.size === 14) {
       io.seek(0);
 

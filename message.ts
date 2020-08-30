@@ -2,15 +2,21 @@ import { ENUMS } from "./enums.ts";
 import { FIELDS } from "./fields.ts";
 import { MESSAGES } from "./messages.ts";
 
+import { DefinitionRecord } from "./definition_record.js";
+
 export class Message {
-  constructor(globalMsgNum, definitions) {
+  globalMsgNum: number;
+  name: string;
+  data: any;
+
+  constructor(globalMsgNum: number, definitions: any) {
     this.globalMsgNum = globalMsgNum;
     this.name = MESSAGES[this.globalMsgNum];
 
     if (this.name !== undefined) {
       const fields = FIELDS[this.globalMsgNum];
       this.data = definitions
-        .map((definition) => {
+        .map((definition: DefinitionRecord) => {
           return this.makeMessage(fields, definition);
         })
         .flat();
@@ -18,11 +24,11 @@ export class Message {
   }
 
   // TODO: Ensure the definition is valid
-  makeMessage(fields, definition) {
-    const finished = [];
-    definition.valid().map((dataRecords) => {
-      const obj = {};
-      dataRecords.map((dataRecord) => {
+  makeMessage(fields: any, definition: any): any {
+    const finished: any = [];
+    definition.valid().map((dataRecords: any) => {
+      const obj: any = {};
+      dataRecords.map((dataRecord: any) => {
         const data = this.processValue(
           fields[dataRecord[0]],
           dataRecord[1].data
@@ -45,7 +51,7 @@ export class Message {
     return finished;
   }
 
-  processValue(type, value) {
+  processValue(type: any, value: any): any {
     if (type["type"].substring(0, 4) === "enum") {
       value = ENUMS[type["type"]][value];
     } else if (
