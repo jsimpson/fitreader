@@ -1,4 +1,12 @@
-export const DATA_TYPES: { [index: number]: {} } = {
+export const DATA_TYPES: {
+  [index: number]: {
+    endianAbility: number,
+    baseFieldType: number,
+    typeName: string,
+    invalidValue: number
+    size: number
+  }
+} = {
   0: {
     endianAbility: 0,
     baseFieldType: 0x00,

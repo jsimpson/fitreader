@@ -1,5 +1,5 @@
 import { BinaryReader } from "./deps.ts";
-import { DataField } from "./data_field.js";
+import { DataField } from "./data_field.ts";
 
 export class DataRecord {
   globalNum: number;

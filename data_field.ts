@@ -1,7 +1,12 @@
+import { BinaryReader } from "./deps.ts";
+
 import { DATA_TYPES } from "./data_types.ts";
 
 export class DataField {
-  constructor(io, opts = {}) {
+  data: any;
+  valid: boolean;
+
+  constructor(io: BinaryReader, opts: {[index: string]: any }) {
     const baseNum = opts["baseNum"];
     const size = opts["size"];
     const arch = opts["arch"];
@@ -130,7 +135,7 @@ export class DataField {
     this.valid = this.check(this.data, base["invalidValue"]);
   }
 
-  check(data, invalid) {
+  check(data: any, invalid: number): boolean {
     if (Array.isArray(data)) {
       const valid = data.map((d) => {
         return d !== invalid;
