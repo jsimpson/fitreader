@@ -6,7 +6,7 @@ export class FileHeader {
   profileVersion: number;
   dataSize: number;
   dataType: Uint8Array;
-  crc: number;
+  crc: number | undefined;
 
   constructor(io: BinaryReader) {
     this.size = io.readUint8();
@@ -20,6 +20,9 @@ export class FileHeader {
     this.dataType[2] = io.readUint8();
     this.dataType[3] = io.readUint8();
 
-    this.crc = io.readUint16(true);
+    // 12-byte file headers will not have a header CRC.
+    if (this.size === 14) {
+      this.crc = io.readUint16(true);
+    }
   }
 }

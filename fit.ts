@@ -26,7 +26,7 @@ export class Fit {
     let devFieldDefs = {};
 
     try {
-      while (io.position < this.header.dataSize + 14) {
+      while (io.position < this.header.dataSize + this.header.size) {
         const h = new RecordHeader(io);
 
         if (h.isDefinition()) {
