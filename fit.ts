@@ -1,6 +1,6 @@
 import { BinaryReader } from "./deps.ts";
 
-import { DefinitionRecord } from "./definition_record.js";
+import { DefinitionRecord } from "./definition_record.ts";
 import { FileHeader } from "./file_header.ts";
 import { RecordHeader } from "./record_header.ts";
 import { DataRecord } from "./data_record.ts";

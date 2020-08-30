@@ -2,7 +2,7 @@ import { ENUMS } from "./enums.ts";
 import { FIELDS } from "./fields.ts";
 import { MESSAGES } from "./messages.ts";
 
-import { DefinitionRecord } from "./definition_record.js";
+import { DefinitionRecord } from "./definition_record.ts";
 
 export class Message {
   globalMsgNum: number;
