@@ -35,7 +35,7 @@ export class DefinitionRecord {
     return this.architecture === 0;
   }
 
-  valid(): [number, DataField][] {
+  valid(): [number, DataField][][] {
     const fields = FIELDS[this.globalMsgNum];
     if (fields === undefined) {
       return [];

@@ -29,14 +29,13 @@ export class Fit {
         const h = new RecordHeader(io);
 
         if (h.isDefinition()) {
-          let d;
 
           if (h.hasDevDefs()) {
             console.log("developer fields.");
             Deno.exit(0);
-          } else {
-            d = new DefinitionRecord(io, h.localMesssageType);
           }
+
+          const d = new DefinitionRecord(io, h.localMesssageType);
 
           if (defs[h.localMesssageType] !== undefined) {
             finished.push(defs[h.localMesssageType]);
