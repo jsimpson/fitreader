@@ -69,7 +69,7 @@ export class Fit {
         }, {});
       };
 
-      const grouped = groupBy(finished, "globalMsgNum");
+      const grouped: {[index: number]: DefinitionRecord[] } = groupBy(finished, "globalMsgNum");
 
       for (const [key, obj] of Object.entries(grouped)) {
         const message = new Message(Number(key), obj);

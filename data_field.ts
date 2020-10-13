@@ -2,7 +2,7 @@ import { BinaryReader } from "./deps.ts";
 import { DATA_TYPES } from "./data_types.ts";
 
 type DataArray = bigint[] | Uint8Array | Int8Array | Uint16Array | Int16Array | Uint32Array | Int32Array | Float32Array | Float64Array;
-type Data = number | bigint | string | DataArray;
+export type Data = number | bigint | string | DataArray;
 
 interface Options {
   baseNum: number;

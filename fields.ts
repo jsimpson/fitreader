@@ -1,4 +1,4 @@
-interface Field {
+export interface Field {
   name: string,
   type: string,
   scale: number,
