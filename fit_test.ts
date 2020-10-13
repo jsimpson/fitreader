@@ -17,8 +17,8 @@ test({
       protocolVersion: 16,
       profileVersion: 64,
       dataSize: 452611,
-      dataType: new Uint8Array([ 46, 70, 73, 84 ]),
-    }
+      dataType: new Uint8Array([46, 70, 73, 84]),
+    };
 
     assertEquals(fit.header, header);
     assertEquals(fit.messages.length, 9);
@@ -28,7 +28,7 @@ test({
 
     assertEquals(fit.messages[MESSAGE_INDEX_LAP].name, "lap");
     assertEquals(fit.messages[MESSAGE_INDEX_RECORD].name, "record");
-  }
+  },
 });
 
 test({
@@ -46,7 +46,7 @@ test({
       protocolVersion: 16,
       profileVersion: 2010,
       dataSize: 191877,
-      dataType: new Uint8Array([ 46, 70, 73, 84 ]),
+      dataType: new Uint8Array([46, 70, 73, 84]),
       crc: 36757,
     };
 
@@ -58,7 +58,7 @@ test({
 
     assertEquals(fit.messages[MESSAGE_INDEX_LAP].name, "lap");
     assertEquals(fit.messages[MESSAGE_INDEX_RECORD].name, "record");
-  }
+  },
 });
 
 test({
@@ -76,7 +76,7 @@ test({
       protocolVersion: 16,
       profileVersion: 1660,
       dataSize: 21613,
-      dataType: new Uint8Array([ 46, 70, 73, 84 ]),
+      dataType: new Uint8Array([46, 70, 73, 84]),
       crc: 17752,
     };
 
@@ -88,5 +88,5 @@ test({
 
     assertEquals(fit.messages[MESSAGE_INDEX_LAP].name, "lap");
     assertEquals(fit.messages[MESSAGE_INDEX_RECORD].name, "record");
-  }
+  },
 });

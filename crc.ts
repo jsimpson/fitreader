@@ -1,6 +1,10 @@
 import { BinaryReader } from "./deps.ts";
 
-export function calculateCrc(io: BinaryReader, start: number, end: number): number {
+export function calculateCrc(
+  io: BinaryReader,
+  start: number,
+  end: number,
+): number {
   const crcTable = [
     0x0000,
     0xcc01,

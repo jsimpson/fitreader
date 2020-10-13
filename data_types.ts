@@ -1,11 +1,11 @@
 export const DATA_TYPES: {
   [index: number]: {
-    endianAbility: number,
-    baseFieldType: number,
-    typeName: string,
-    invalidValue: number | bigint
-    size: number
-  }
+    endianAbility: number;
+    baseFieldType: number;
+    typeName: string;
+    invalidValue: number | bigint;
+    size: number;
+  };
 } = {
   0: {
     endianAbility: 0,

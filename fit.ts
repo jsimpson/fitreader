@@ -29,7 +29,6 @@ export class Fit {
         const h = new RecordHeader(io);
 
         if (h.isDefinition()) {
-
           if (h.hasDevDefs()) {
             console.log("developer fields.");
             Deno.exit(0);
@@ -69,7 +68,10 @@ export class Fit {
         }, {});
       };
 
-      const grouped: {[index: number]: DefinitionRecord[] } = groupBy(finished, "globalMsgNum");
+      const grouped: { [index: number]: DefinitionRecord[] } = groupBy(
+        finished,
+        "globalMsgNum",
+      );
 
       for (const [key, obj] of Object.entries(grouped)) {
         const message = new Message(Number(key), obj);

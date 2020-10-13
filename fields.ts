@@ -1,11 +1,11 @@
 export interface Field {
-  name: string,
-  type: string,
-  scale: number,
-  offset: number
+  name: string;
+  type: string;
+  scale: number;
+  offset: number;
 }
 
-export const FIELDS: { [index: string]: { [index: string]: Field }} = {
+export const FIELDS: { [index: string]: { [index: string]: Field } } = {
   "0": {
     "0": {
       "name": "filetype",

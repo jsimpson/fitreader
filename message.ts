@@ -24,14 +24,17 @@ export class Message {
     }
   }
 
-  makeMessage(fields: { [index: string]: Field }, definition: DefinitionRecord): { [index: string]: string }[] {
+  makeMessage(
+    fields: { [index: string]: Field },
+    definition: DefinitionRecord,
+  ): { [index: string]: string }[] {
     const finished: { [index: string]: string }[] = [];
     definition.valid().map((dataRecords: [number, DataField][]) => {
       const obj: { [index: string]: string } = {};
       dataRecords.map((dataRecord: [number, DataField]) => {
         const data = this.processValue(
           fields[dataRecord[0]],
-          dataRecord[1].data
+          dataRecord[1].data,
         );
         obj[data[0]] = data[1];
       });
