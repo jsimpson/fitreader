@@ -16,18 +16,6 @@ export class DataRecord {
 
       return [fieldDef.fieldDefNum, new DataField(io, opts)];
     });
-
-    if (def.hasDevDefs) {
-      this.devFields = def.devFieldDefs.map((devFieldDef: any) => {
-        const opts = {
-          baseNum: devFieldDef.fieldDef["baseTypeId"],
-          size: devFieldDef.size,
-          arch: devFieldDef.endianness,
-        };
-
-        return [devFieldDef.fieldDef["fieldName"], new DataField(io, opts)];
-      });
-    }
   }
 
   valid(): any {
@@ -36,9 +24,5 @@ export class DataRecord {
         return field;
       }
     });
-  }
-
-  devFields() {
-    return this.devFields ? this.devFields : {};
   }
 }

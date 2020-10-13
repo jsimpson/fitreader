@@ -1,12 +1,20 @@
 import { BinaryReader } from "./deps.ts";
-
 import { DATA_TYPES } from "./data_types.ts";
 
+type DataArray = bigint[] | Uint8Array | Int8Array | Uint16Array | Int16Array | Uint32Array | Int32Array | Float32Array | Float64Array;
+type Data = number | bigint | string | DataArray;
+
+interface Options {
+  baseNum: number;
+  size: number;
+  arch: number;
+}
+
 export class DataField {
-  data: any;
+  data: Data;
   valid: boolean;
 
-  constructor(io: BinaryReader, opts: {[index: string]: any }) {
+  constructor(io: BinaryReader, opts: Options) {
     const baseNum = opts["baseNum"];
     const size = opts["size"];
     const arch = opts["arch"];
@@ -135,7 +143,7 @@ export class DataField {
     this.valid = this.check(this.data, base["invalidValue"]);
   }
 
-  check(data: any, invalid: number): boolean {
+  check(data: Data, invalid: number | bigint): boolean {
     if (Array.isArray(data)) {
       const valid = data.map((d) => {
         return d !== invalid;

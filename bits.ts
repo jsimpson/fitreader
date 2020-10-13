@@ -15,7 +15,7 @@ export function readBit(byte: number, bit: number) {
 
 export function readBits(byte: number, range: number[]) {
   let mask = 0;
-  for (let i: number = range[0]; i >= range[1]; i--) {
+  for (let i = range[0]; i >= range[1]; i--) {
     mask += MASKS[i];
   }
   return (byte & mask) >> range[1];
