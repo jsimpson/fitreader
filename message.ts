@@ -1,7 +1,8 @@
 import { ENUMS } from "./enums.ts";
-import { FIELDS } from "./fields.ts";
+import { Field, FIELDS } from "./fields.ts";
 import { MESSAGES } from "./messages.ts";
 
+import { DataField } from "./data_field.ts";
 import { DefinitionRecord } from "./definition_record.ts";
 
 export class Message {
@@ -9,7 +10,7 @@ export class Message {
   name: string;
   data: any;
 
-  constructor(globalMsgNum: number, definitions: any) {
+  constructor(globalMsgNum: number, definitions: DefinitionRecord[]) {
     this.globalMsgNum = globalMsgNum;
     this.name = MESSAGES[this.globalMsgNum];
 
@@ -23,69 +24,61 @@ export class Message {
     }
   }
 
-  // TODO: Ensure the definition is valid
-  makeMessage(fields: any, definition: any): any {
-    const finished: any = [];
-    definition.valid().map((dataRecords: any) => {
-      const obj: any = {};
-      dataRecords.map((dataRecord: any) => {
+  makeMessage(
+    fields: { [index: string]: Field },
+    definition: DefinitionRecord,
+  ): { [index: string]: string }[] {
+    const finished: { [index: string]: string }[] = [];
+    definition.valid().map((dataRecords: [number, DataField][]) => {
+      const obj: { [index: string]: string } = {};
+      dataRecords.map((dataRecord: [number, DataField]) => {
         const data = this.processValue(
           fields[dataRecord[0]],
-          dataRecord[1].data
+          dataRecord[1].data,
         );
         obj[data[0]] = data[1];
       });
       finished.push(obj);
     });
 
-    // TODO: Process events and device info
-    switch (this.globalMsgNum) {
-      case 21:
-        break;
-      case 0:
-      case 23:
-        break;
-    }
-
-    // TODO: Process and combine with developer fields
     return finished;
   }
 
-  processValue(type: any, value: any): any {
-    if (type["type"].substring(0, 4) === "enum") {
-      value = ENUMS[type["type"]][value];
+  processValue(field: Field, value: any): [string, any] {
+    if (field["type"].substring(0, 4) === "enum") {
+      value = ENUMS[field["type"]][value];
     } else if (
-      type["type"] === "dateTime" ||
-      type["type"] === "localDateTime"
+      field["type"] === "dateTime" ||
+      field["type"] === "localDateTime"
     ) {
       const t = new Date(Date.UTC(1989, 11, 31, 0, 0, 0)).getTime() / 1000;
       const d = new Date(0);
       d.setUTCSeconds(value + t);
       value = d.toISOString();
-    } else if (type["type"] === "coordinates") {
+    } else if (field["type"] === "coordinates") {
       value *= 180.0 / 2 ** 31;
     }
 
-    if (type["scale"] !== 0) {
+    if (field["scale"] !== 0) {
       if (Array.isArray(value)) {
         value = value.map((val) => {
-          return (val * 1.0) / type["scale"];
+          return (val * 1.0) / field["scale"];
         });
       } else {
-        value = (value * 1.0) / type["scale"];
+        value = (value * 1.0) / field["scale"];
       }
     }
 
-    if (type["offset"] !== 0) {
+    if (field["offset"] !== 0) {
       if (Array.isArray(value)) {
         value = value.map((val) => {
-          return val - type["offset"];
+          return val - field["offset"];
         });
       } else {
-        value = value - type["offset"];
+        value = value - field["offset"];
       }
     }
 
-    return [type["name"], value];
+    return [field["name"], value];
   }
 }

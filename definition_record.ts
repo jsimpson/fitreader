@@ -2,7 +2,8 @@ import { BinaryReader } from "./deps.ts";
 
 import { FIELDS } from "./fields.ts";
 
-import { DevFieldDefinition } from "./dev_field_definition.ts";
+import { DataField } from "./data_field.ts";
+import { DataRecord } from "./data_record.ts";
 import { FieldDefinition } from "./field_definition.ts";
 
 export class DefinitionRecord {
@@ -10,11 +11,10 @@ export class DefinitionRecord {
   reserved: number;
   architecture: number;
   globalMsgNum: number;
-  fieldDefinitions: any;
-  devFieldDefs: any;
-  dataRecords: any;
+  fieldDefinitions: FieldDefinition[];
+  dataRecords: DataRecord[];
 
-  constructor(io: BinaryReader, localNum: number, devFieldDefs?: any) {
+  constructor(io: BinaryReader, localNum: number) {
     this.localNum = localNum;
 
     this.reserved = io.readUint8();
@@ -28,14 +28,6 @@ export class DefinitionRecord {
       this.fieldDefinitions[i] = new FieldDefinition(io);
     }
 
-    if (devFieldDefs !== undefined) {
-      const numDevFields = io.readUint8();
-      this.devFieldDefs = new Array(numDevFields);
-      for (let i = 0; i < numDevFields; i++) {
-        this.devFieldDefs[i] = new DevFieldDefinition(io, devFieldDefs);
-      }
-    }
-
     this.dataRecords = [];
   }
 
@@ -43,18 +35,14 @@ export class DefinitionRecord {
     return this.architecture === 0;
   }
 
-  hasDefFields(): boolean {
-    return this.devFieldDefs !== undefined && this.devFieldDefs.length > 1;
-  }
-
-  valid(): any {
+  valid(): [number, DataField][][] {
     const fields = FIELDS[this.globalMsgNum];
     if (fields === undefined) {
       return [];
     }
 
-    return this.dataRecords.map((dataRecord: any) => {
-      return dataRecord.valid().filter((dr: any) => {
+    return this.dataRecords.map((dataRecord: DataRecord) => {
+      return dataRecord.valid().filter((dr: [number, DataField]) => {
         if (dr[0] in fields) {
           return dr;
         }

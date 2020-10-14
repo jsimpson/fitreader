@@ -1,11 +1,11 @@
 export const DATA_TYPES: {
   [index: number]: {
-    endianAbility: number,
-    baseFieldType: number,
-    typeName: string,
-    invalidValue: number
-    size: number
-  }
+    endianAbility: number;
+    baseFieldType: number;
+    typeName: string;
+    invalidValue: number | bigint;
+    size: number;
+  };
 } = {
   0: {
     endianAbility: 0,
@@ -74,7 +74,7 @@ export const DATA_TYPES: {
     endianAbility: 1,
     baseFieldType: 0x89,
     typeName: "float64",
-    invalidValue: 0xffffffffffffffff,
+    invalidValue: 0xffffffffffffffffn,
     size: 8,
   },
   10: {
@@ -109,14 +109,14 @@ export const DATA_TYPES: {
     endianAbility: 1,
     baseFieldType: 0x8e,
     typeName: "sint64",
-    invalidValue: 0x7fffffffffffffff,
+    invalidValue: 0x7fffffffffffffffn,
     size: 8,
   },
   15: {
     endianAbility: 1,
     baseFieldType: 0x8f,
     typeName: "uint64",
-    invalidValue: 0xffffffffffffffff,
+    invalidValue: 0xffffffffffffffffn,
     size: 8,
   },
   16: {

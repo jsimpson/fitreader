@@ -22,21 +22,19 @@ export class Fit {
 
     this.messages = [];
     let finished = [];
-    let defs: any = {};
-    let devFieldDefs = {};
+    let defs: { [index: number]: DefinitionRecord } = {};
 
     try {
       while (io.position < this.header.dataSize + this.header.size) {
         const h = new RecordHeader(io);
 
         if (h.isDefinition()) {
-          let d;
-
           if (h.hasDevDefs()) {
-            d = new DefinitionRecord(io, h.localMesssageType, devFieldDefs);
-          } else {
-            d = new DefinitionRecord(io, h.localMesssageType);
+            console.log("developer fields.");
+            Deno.exit(0);
           }
+
+          const d = new DefinitionRecord(io, h.localMesssageType);
 
           if (defs[h.localMesssageType] !== undefined) {
             finished.push(defs[h.localMesssageType]);
@@ -48,13 +46,14 @@ export class Fit {
           const dataRecord = new DataRecord(io, d);
 
           if (d.globalMsgNum === 206) {
-            console.log("dev field, shit");
-            // TODO: Implement decoding dev fields
+            console.log("developer fields");
+            Deno.exit(0);
           } else {
             d.dataRecords.push(dataRecord);
           }
         } else if (h.hasTimestamp()) {
-          console.log("has timestamp");
+          console.log("timestamp fields");
+          Deno.exit(0);
         }
       }
 
@@ -69,7 +68,10 @@ export class Fit {
         }, {});
       };
 
-      const grouped = groupBy(finished, "globalMsgNum");
+      const grouped: { [index: number]: DefinitionRecord[] } = groupBy(
+        finished,
+        "globalMsgNum",
+      );
 
       for (const [key, obj] of Object.entries(grouped)) {
         const message = new Message(Number(key), obj);
