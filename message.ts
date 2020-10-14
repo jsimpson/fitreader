@@ -8,7 +8,7 @@ import { DefinitionRecord } from "./definition_record.ts";
 export class Message {
   globalMsgNum: number;
   name: string;
-  data: any;
+  data: { [index: string]: string }[] = [];
 
   constructor(globalMsgNum: number, definitions: DefinitionRecord[]) {
     this.globalMsgNum = globalMsgNum;

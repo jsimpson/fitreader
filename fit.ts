@@ -21,8 +21,8 @@ export class Fit {
     }
 
     this.messages = [];
-    let finished = [];
-    let defs: { [index: number]: DefinitionRecord } = {};
+    const finished = [];
+    const defs: { [index: number]: DefinitionRecord } = {};
 
     try {
       while (io.position < this.header.dataSize + this.header.size) {
@@ -61,17 +61,14 @@ export class Fit {
         finished.push(def);
       }
 
-      const groupBy = (xs: any, key: any) => {
-        return xs.reduce((rv: any, x: any) => {
-          (rv[x[key]] = rv[x[key]] || []).push(x);
+      const groupBy = (xs: DefinitionRecord[]) => {
+        return xs.reduce((rv: { [index: number]: DefinitionRecord[] }, x: DefinitionRecord) => {
+          (rv[x.globalMsgNum] = rv[x.globalMsgNum] || []).push(x);
           return rv;
         }, {});
       };
 
-      const grouped: { [index: number]: DefinitionRecord[] } = groupBy(
-        finished,
-        "globalMsgNum",
-      );
+      const grouped: { [index: number]: DefinitionRecord[] } = groupBy(finished);
 
       for (const [key, obj] of Object.entries(grouped)) {
         const message = new Message(Number(key), obj);
