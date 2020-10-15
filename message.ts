@@ -58,8 +58,6 @@ export class Message {
       value = d.toISOString();
     } else if (field["type"] === "coordinates") {
       value *= 180.0 / 2 ** 31;
-    } else {
-      console.log(field["type"]);
     }
 
     if (field["scale"] !== 0) {
