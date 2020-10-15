@@ -62,13 +62,21 @@ export class Fit {
       }
 
       const groupBy = (xs: DefinitionRecord[]) => {
-        return xs.reduce((rv: { [index: number]: DefinitionRecord[] }, x: DefinitionRecord) => {
-          (rv[x.globalMsgNum] = rv[x.globalMsgNum] || []).push(x);
-          return rv;
-        }, {});
+        return xs.reduce(
+          (
+            rv: { [index: number]: DefinitionRecord[] },
+            x: DefinitionRecord,
+          ) => {
+            (rv[x.globalMsgNum] = rv[x.globalMsgNum] || []).push(x);
+            return rv;
+          },
+          {},
+        );
       };
 
-      const grouped: { [index: number]: DefinitionRecord[] } = groupBy(finished);
+      const grouped: { [index: number]: DefinitionRecord[] } = groupBy(
+        finished,
+      );
 
       for (const [key, obj] of Object.entries(grouped)) {
         const message = new Message(Number(key), obj);
