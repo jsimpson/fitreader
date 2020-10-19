@@ -45,7 +45,7 @@ export class Message {
   }
 
   // deno-lint-ignore no-explicit-any
-  processValue(field: Field, value: any): any {
+  processValue(field: Field, value: any): [string, number | string] {
     if (field["type"].substring(0, 4) === "enum") {
       value = ENUMS[field["type"]][value];
     } else if (
