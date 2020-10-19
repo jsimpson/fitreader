@@ -3,7 +3,7 @@ import { BinaryReader } from "./deps.ts";
 import { FIELDS } from "./fields.ts";
 
 import { DataField } from "./data_field.ts";
-import { DataRecord } from "./data_record.ts";
+import { valid, DataRecord } from "./data_record.ts";
 import { FieldDefinition } from "./field_definition.ts";
 
 export class DefinitionRecord {
@@ -42,7 +42,7 @@ export class DefinitionRecord {
     }
 
     return this.dataRecords.map((dataRecord: DataRecord) => {
-      return dataRecord.valid().filter((dr: [number, DataField]) => {
+      return valid(dataRecord).filter((dr: [number, DataField]) => {
         if (dr[0] in fields) {
           return dr;
         }

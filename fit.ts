@@ -3,7 +3,7 @@ import { BinaryReader } from "./deps.ts";
 import { DefinitionRecord } from "./definition_record.ts";
 import { FileHeader } from "./file_header.ts";
 import { RecordHeader } from "./record_header.ts";
-import { DataRecord } from "./data_record.ts";
+import { dataRecord, DataRecord } from "./data_record.ts";
 import { Message } from "./message.ts";
 
 import { calculateCrc } from "./crc.ts";
@@ -43,13 +43,13 @@ export class Fit {
           defs[h.localMesssageType] = d;
         } else if (h.isData()) {
           const d = defs[h.localMesssageType];
-          const dataRecord = new DataRecord(io, d);
+          const record: DataRecord = dataRecord(io, d);
 
           if (d.globalMsgNum === 206) {
             console.log("developer fields");
             Deno.exit(0);
           } else {
-            d.dataRecords.push(dataRecord);
+            d.dataRecords.push(record);
           }
         } else if (h.hasTimestamp()) {
           console.log("timestamp fields");

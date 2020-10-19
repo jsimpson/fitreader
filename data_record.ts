@@ -3,13 +3,21 @@ import { DataField } from "./data_field.ts";
 import { DefinitionRecord } from "./definition_record.ts";
 import { FieldDefinition } from "./field_definition.ts";
 
-export class DataRecord {
-  globalNum: number;
-  fields: [number, DataField][];
+type Field = [number, DataField];
+type Fields = Field[];
 
-  constructor(io: BinaryReader, def: DefinitionRecord) {
-    this.globalNum = def.globalMsgNum;
-    this.fields = def.fieldDefinitions.map((fieldDef: FieldDefinition) => {
+export interface DataRecord {
+  globalMsgNum: number;
+  fields: Fields;
+}
+
+export function dataRecord(
+  io: BinaryReader,
+  def: DefinitionRecord,
+): DataRecord {
+  return {
+    globalMsgNum: def.globalMsgNum,
+    fields: def.fieldDefinitions.map((fieldDef: FieldDefinition) => {
       const opts = {
         baseNum: fieldDef.baseNum,
         size: fieldDef.size,
@@ -17,14 +25,14 @@ export class DataRecord {
       };
 
       return [fieldDef.fieldDefNum, new DataField(io, opts)];
-    });
-  }
+    }),
+  };
+}
 
-  valid(): [number, DataField][] {
-    return this.fields.filter((field: [number, DataField]) => {
-      if (field[1].valid) {
-        return field;
-      }
-    });
-  }
+export function valid(dataRecord: DataRecord): Fields {
+  return dataRecord.fields.filter((field: Field) => {
+    if (field[1].valid) {
+      return field;
+    }
+  });
 }
