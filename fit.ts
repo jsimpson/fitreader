@@ -3,7 +3,7 @@ import { BinaryReader } from "./deps.ts";
 import { DefinitionRecord } from "./definition_record.ts";
 import { FileHeader } from "./file_header.ts";
 import { RecordHeader } from "./record_header.ts";
-import { dataRecord, DataRecord } from "./data_record.ts";
+import { DataRecord, dataRecord } from "./data_record.ts";
 import { Message } from "./message.ts";
 
 import { calculateCrc } from "./crc.ts";
