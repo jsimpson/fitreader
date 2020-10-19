@@ -3,7 +3,7 @@ import { BinaryReader } from "./deps.ts";
 import { FIELDS } from "./fields.ts";
 
 import { DataField } from "./data_field.ts";
-import { valid, DataRecord } from "./data_record.ts";
+import { DataRecord, valid } from "./data_record.ts";
 import { FieldDefinition } from "./field_definition.ts";
 
 export class DefinitionRecord {
