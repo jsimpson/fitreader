@@ -5,10 +5,12 @@ import { MESSAGES } from "./messages.ts";
 import { DataField } from "./data_field.ts";
 import { DefinitionRecord } from "./definition_record.ts";
 
+type Record = { [index: string]: number | string};
+
 export class Message {
   globalMsgNum: number;
   name: string;
-  data: { [index: string]: number | string }[] = [];
+  data: Record[] = [];
 
   constructor(globalMsgNum: number, definitions: DefinitionRecord[]) {
     this.globalMsgNum = globalMsgNum;
@@ -27,10 +29,10 @@ export class Message {
   makeMessage(
     fields: { [index: string]: Field },
     definition: DefinitionRecord,
-  ): { [index: string]: number | string }[] {
-    const finished: { [index: string]: number | string }[] = [];
+  ): Record[] {
+    const finished: Record[] = [];
     definition.valid().map((dataRecords: [number, DataField][]) => {
-      const obj: { [indedx: string]: number | string } = {};
+      const obj: Record = {};
       dataRecords.map((dataRecord: [number, DataField]) => {
         const data = this.processValue(
           fields[dataRecord[0]],
