@@ -5,7 +5,7 @@ import { MESSAGES } from "./messages.ts";
 import { DataField } from "./data_field.ts";
 import { DefinitionRecord } from "./definition_record.ts";
 
-type Record = { [index: string]: number | string};
+type Record = { [index: string]: number | string };
 
 export class Message {
   globalMsgNum: number;
