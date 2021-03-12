@@ -145,7 +145,6 @@ export class DataField {
         break;
       default:
         throw new Error(`Error reading base type: ${base}`);
-        break;
     }
 
     this.valid = this.check(this.data, base["invalidValue"]);
