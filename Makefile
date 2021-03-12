@@ -1,8 +1,8 @@
 .PHONY: test lint
 
 lint:
-	deno fmt --check
-	deno lint --unstable
+	deno fmt --check *.ts
+	deno lint --unstable *.ts
 
 test:
 	deno test --allow-read
