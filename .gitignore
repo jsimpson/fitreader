@@ -1,1 +1,5 @@
 *.json
+*.fit
+
+.vim/
+.vscode/
