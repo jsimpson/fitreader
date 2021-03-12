@@ -1,3 +1,5 @@
+// $ deno run --allow-read fitreader.ts file.fit
+
 import { BinaryReader } from "./deps.ts";
 
 import { Fit } from "./fit.ts";

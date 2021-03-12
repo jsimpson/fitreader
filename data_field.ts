@@ -144,8 +144,7 @@ export class DataField {
         this.data = io.readString(size);
         break;
       default:
-        console.log(`Error reading base type: ${base}`);
-        Deno.exit(1);
+        throw new Error(`Error reading base type: ${base}`);
         break;
     }
 

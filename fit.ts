@@ -65,17 +65,17 @@ export class Fit {
         return xs.reduce(
           (
             rv: { [index: number]: DefinitionRecord[] },
-            x: DefinitionRecord,
+            x: DefinitionRecord
           ) => {
             (rv[x.globalMsgNum] = rv[x.globalMsgNum] || []).push(x);
             return rv;
           },
-          {},
+          {}
         );
       };
 
       const grouped: { [index: number]: DefinitionRecord[] } = groupBy(
-        finished,
+        finished
       );
 
       for (const [key, obj] of Object.entries(grouped)) {
