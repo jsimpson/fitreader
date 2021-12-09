@@ -20,7 +20,12 @@ test({
       dataType: new Uint8Array([46, 70, 73, 84]),
     };
 
-    assertEquals(fit.header, header);
+    assertEquals(fit.header.size, header.size);
+    assertEquals(fit.header.protocolVersion, header.protocolVersion);
+    assertEquals(fit.header.profileVersion, header.profileVersion);
+    assertEquals(fit.header.dataSize, header.dataSize);
+    assertEquals(fit.header.dataType, header.dataType);
+
     assertEquals(fit.messages.length, 9);
 
     const MESSAGE_INDEX_LAP = 2;
@@ -50,7 +55,13 @@ test({
       crc: 36757,
     };
 
-    assertEquals(fit.header, header);
+    assertEquals(fit.header.size, header.size);
+    assertEquals(fit.header.protocolVersion, header.protocolVersion);
+    assertEquals(fit.header.profileVersion, header.profileVersion);
+    assertEquals(fit.header.dataSize, header.dataSize);
+    assertEquals(fit.header.dataType, header.dataType);
+    assertEquals(fit.header.crc, header.crc);
+
     assertEquals(fit.messages.length, 16);
 
     const MESSAGE_INDEX_LAP = 6;
@@ -80,7 +91,13 @@ test({
       crc: 17752,
     };
 
-    assertEquals(fit.header, header);
+    assertEquals(fit.header.size, header.size);
+    assertEquals(fit.header.protocolVersion, header.protocolVersion);
+    assertEquals(fit.header.profileVersion, header.profileVersion);
+    assertEquals(fit.header.dataSize, header.dataSize);
+    assertEquals(fit.header.dataType, header.dataType);
+    assertEquals(fit.header.crc, header.crc);
+
     assertEquals(fit.messages.length, 10);
 
     const MESSAGE_INDEX_LAP = 3;
